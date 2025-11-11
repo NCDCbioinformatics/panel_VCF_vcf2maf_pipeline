@@ -1,5 +1,4 @@
-# NCDC_panel_VCF_vcf2maf
-
+# NCDC_panel_VCF_vcf2maf 이전 버전
 
 #parallel process: batch_vcf2maf_liftover_parallel_V.1.1.7_github \
 #one by one process: batch_vcf2maf_liftover_V.1.0.9_github
@@ -11,6 +10,17 @@ chmod +x batch_vcf2maf_liftover_V.1.0.9.sh \
 #parallel process \
 chmod +x batch_vcf2maf_liftover_parallel_V.1.1.7.sh \
 ./batch_vcf2maf_liftover_parallel_V.1.1.7.sh
+
+# NCDC_panel_VCF_vcf2maf 최신 버전(NCDC_batch_vcf2maf_V.1.2.0)
+
+- 최신 버전 부터는 parallel 및 one by one을 하나로 변경
+chmod +x NCDC_batch_vcf2maf_V.1.2.0.sh \
+./NCDC_batch_vcf2maf_V.1.2.0.sh
+
+- 병열 처리 수 및 sample 이름 길이 설정
+CORES=4 \
+SAMPLE_TAG_LENGTH=8  # Tumor_Sample_Barcode length (e.g., 8 → "S002-033")
+
 
 # 기능 요약:
 - # 입력: INPUT_DIR 아래의 모든 *.vcf* 파일 (확장자: .vcf, .vcf.vep 만 가능) 
