@@ -11,14 +11,14 @@ chmod +x batch_vcf2maf_liftover_V.1.0.9.sh \
 chmod +x batch_vcf2maf_liftover_parallel_V.1.1.7.sh \
 ./batch_vcf2maf_liftover_parallel_V.1.1.7.sh
 
-# panel_VCF_vcf2maf latest version (NCDC_batch_vcf2maf_V.1.2.0)
+# panel_VCF_vcf2maf latest version (NCDC_batch_vcf2maf_V.1.2.1)
 
-chmod +x NCDC_batch_vcf2maf_V.1.2.0.sh \
-./NCDC_batch_vcf2maf_V.1.2.0.sh
+chmod +x NCDC_batch_vcf2maf_V.1.2.1.sh \
+./NCDC_batch_vcf2maf_V.1.2.1.sh
 
 - Setting the number of parallel processing and sample name length \
 CORES=4 \
-SAMPLE_TAG_LENGTH=8  # Tumor_Sample_Barcode length (e.g., 8 → "S002-033")
+SAMPLE_TAG_LENGTH=8  # Tumor_Sample_Barcode length (e.g., 8 → "T002-033")
 
 
 # Feature Summary:
