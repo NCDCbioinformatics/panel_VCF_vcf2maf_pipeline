@@ -1,6 +1,7 @@
-# Old version of panel_VCF_vcf2maf
+#panel_VCF_vcf2maf
 <img width="2227" height="970" alt="image" src="https://github.com/user-attachments/assets/b66a5d03-c700-4b54-8f45-62db966795e6" />
 
+# Oversion of panel_VCF_vcf2maf
 #parallel process: batch_vcf2maf_liftover_parallel_V.1.1.7_github \
 #one by one process: batch_vcf2maf_liftover_V.1.0.9_github
 
@@ -12,10 +13,10 @@ chmod +x batch_vcf2maf_liftover_V.1.0.9.sh \
 chmod +x batch_vcf2maf_liftover_parallel_V.1.1.7.sh \
 ./batch_vcf2maf_liftover_parallel_V.1.1.7.sh
 
-# panel_VCF_vcf2maf latest version (NCDC_batch_vcf2maf_V.1.2.1)
+# panel_VCF_vcf2maf latest version (NCDC_batch_vcf2maf_V.1.3.0)
 
-chmod +x NCDC_batch_vcf2maf_V.1.2.1.sh \
-./NCDC_batch_vcf2maf_V.1.2.1.sh
+chmod +x NCDC_batch_vcf2maf_V.1.3.0.sh \
+./NCDC_batch_vcf2maf_V.1.3.0.sh
 
 - Setting the number of parallel processing and sample name length \
 CORES=4 \
