@@ -15,8 +15,8 @@ chmod +x batch_vcf2maf_liftover_parallel_V.1.1.7.sh \
 
 # panel_VCF_vcf2maf latest version (NCDC_batch_vcf2maf_V.1.3.0)
 
-chmod +x NCDC_batch_vcf2maf_V.1.3.0.sh \
-./NCDC_batch_vcf2maf_V.1.3.0.sh
+chmod +x NCDC_batch_vcf2maf_V.1.3.3.sh \
+./NCDC_batch_vcf2maf_V.1.3.3.sh
 
 - Setting the number of parallel processing and sample name length \
 CORES=4 \
