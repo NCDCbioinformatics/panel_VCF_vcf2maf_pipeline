@@ -13,7 +13,7 @@ chmod +x batch_vcf2maf_liftover_V.1.0.9.sh \
 chmod +x batch_vcf2maf_liftover_parallel_V.1.1.7.sh \
 ./batch_vcf2maf_liftover_parallel_V.1.1.7.sh
 
-# panel_VCF_vcf2maf latest version (NCDC_batch_vcf2maf_V.1.3.0)
+# panel_VCF_vcf2maf latest version (NCDC_batch_vcf2maf_V.1.3.3)
 
 chmod +x NCDC_batch_vcf2maf_V.1.3.3.sh \
 ./NCDC_batch_vcf2maf_V.1.3.3.sh
