@@ -35,9 +35,14 @@ SAMPLE_TAG_LENGTH=8  # Tumor_Sample_Barcode length (e.g., 8 → "T002-033")
  - Use the first 8 characters of the file name as Tumor_Sample_Barcode (can be changed)
  - The MAF file name is created by replacing spaces/parentheses in the original VCF name with '_'
  - Errors/statuses are logged to LOG_TSV
+## Publication context
 
+This repository is a component of the CURE-NGS panel harmonization framework described in the manuscript \"Multi-Institutional Harmonization Framework for Heterogeneous Panel-Based NGS in Precision Oncology.\"
 
+Umbrella repository: https://github.com/NCDCbioinformatics/cure-ngs-panel-harmonization-framework
 
+## Software metadata
 
-
-
+- Operating system(s): Linux; Windows users can run supported workflows via WSL where needed
+- Programming language(s): Bash shell
+- License: MIT License
