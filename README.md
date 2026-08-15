@@ -2,6 +2,25 @@
 
 Batch utilities for converting panel VCF inputs into MAF outputs with `vcf2maf`.
 
+> **Reviewer and new-user deployment:** use the supported, version-pinned
+> [CURE-NGS Docker/OCI distribution](https://github.com/NCDCbioinformatics/cure-ngs-panel-harmonization-framework#reviewer-quick-start).
+> It replaces workstation-specific paths with explicit bind mounts and command
+> options, and includes automated tests spanning all six component functions.
+
+## Reproducible installation and test data
+
+- [Clean-machine installation](https://github.com/NCDCbioinformatics/cure-ngs-panel-harmonization-framework/blob/main/docs/INSTALLATION.md)
+- [GRCh37 FASTA, VEP 116 cache, liftover chain, GTF, and HGNC setup](https://github.com/NCDCbioinformatics/cure-ngs-panel-harmonization-framework/blob/main/docs/REFERENCE_DATA.md)
+- [VCF-to-MAF command examples](https://github.com/NCDCbioinformatics/cure-ngs-panel-harmonization-framework/blob/main/docs/COMMAND_REFERENCE.md#vcf-or-gvcf-route)
+- [Network-free reviewer walkthrough](https://github.com/NCDCbioinformatics/cure-ngs-panel-harmonization-framework/blob/main/docs/REVIEWER_REPRODUCTION.md)
+- [Synthetic and attributed public VCF fixtures](https://github.com/NCDCbioinformatics/cure-ngs-panel-harmonization-framework/tree/main/examples)
+
+The latest audited historical release is
+`NCDC_batch_vcf2maf_V.1.3.3_github`. Its tag, commit, asset size, and SHA-256
+are locked in the umbrella repository. The scripts below remain available for
+provenance and expert use; the consolidated container is the supported route
+for external reproduction.
+
 ## Repository role
 
 This repository is a component of the CURE-NGS panel harmonization framework described in the manuscript "Multi-Institutional Harmonization Framework for Heterogeneous Panel-Based NGS in Precision Oncology."
