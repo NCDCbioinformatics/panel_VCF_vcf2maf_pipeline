@@ -43,11 +43,16 @@ network-free reviewer and preprocessing environment.
 
 ## Verify and run this capability
 
-Run the network-free six-component reviewer test:
+First-time users can run the network-free six-component tutorial with the
+public example data:
 
 ```bash
-bash scripts/run_reviewer_demo.sh
+bash scripts/run_beginner_tutorial.sh
 ```
+
+The [step-by-step beginner guide](https://github.com/NCDCbioinformatics/cure-ngs-panel-harmonization-framework/blob/main/docs/BEGINNER_TUTORIAL.md)
+explains every command, expected result, output, and the optional full VEP
+annotation stage.
 
 For a heterogeneous directory, keep the large FASTAs, indexes, VEP cache, and
 liftover chains outside the image. Copy the portable configuration template,
@@ -113,6 +118,7 @@ umbrella CLI is the supported reproducible interface.
 
 ## Documentation and test data
 
+- [Beginner tutorial for all six components](https://github.com/NCDCbioinformatics/cure-ngs-panel-harmonization-framework/blob/main/docs/BEGINNER_TUTORIAL.md)
 - [Project structure](https://github.com/NCDCbioinformatics/cure-ngs-panel-harmonization-framework/blob/main/docs/PROJECT_STRUCTURE.md)
 - [Complete command reference](https://github.com/NCDCbioinformatics/cure-ngs-panel-harmonization-framework/blob/main/docs/COMMAND_REFERENCE.md#vcf-or-gvcf-route)
 - [Restored V1.3.3 batch workflow and reference-bundle layout](https://github.com/NCDCbioinformatics/cure-ngs-panel-harmonization-framework/blob/main/docs/V1.3.3_BATCH_WORKFLOW.md)
