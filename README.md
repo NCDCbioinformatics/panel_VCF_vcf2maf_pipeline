@@ -57,7 +57,8 @@ edit its relative paths, and validate the complete bundle first:
 REFERENCE_DIR=/path/to/your/reference-store
 mkdir -p config
 
-docker run --rm --volume "$PWD/config:/config" \
+docker run --rm --user "$(id -u):$(id -g)" \
+  --volume "$PWD/config:/config" \
   ghcr.io/ncdcbioinformatics/cure-ngs-harmonizer:0.2.1 \
   init-reference-config /config/reference-config.json \
   --reference-root /references --cache-version 116
