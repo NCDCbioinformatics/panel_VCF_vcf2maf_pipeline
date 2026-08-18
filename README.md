@@ -28,14 +28,14 @@ of the CURE-NGS panel harmonization framework.
 ```bash
 git clone https://github.com/NCDCbioinformatics/cure-ngs-panel-harmonization-framework.git
 cd cure-ngs-panel-harmonization-framework
-docker build --file docker/Dockerfile --tag cure-ngs-harmonizer:0.2.0 .
+docker build --file docker/Dockerfile --tag cure-ngs-harmonizer:0.2.1 .
 ```
 
 The released full and core images can be downloaded without a GitHub login:
 
 ```bash
-docker pull ghcr.io/ncdcbioinformatics/cure-ngs-harmonizer:0.2.0
-docker pull ghcr.io/ncdcbioinformatics/cure-ngs-harmonizer:0.2.0-core
+docker pull ghcr.io/ncdcbioinformatics/cure-ngs-harmonizer:0.2.1
+docker pull ghcr.io/ncdcbioinformatics/cure-ngs-harmonizer:0.2.1-core
 ```
 
 The full image contains VEP, Picard, and vcf2maf. The core image is the smaller
@@ -54,24 +54,42 @@ liftover chains outside the image. Copy the portable configuration template,
 edit its relative paths, and validate the complete bundle first:
 
 ```bash
-cp references/reference-config.example.json references/reference-config.json
+REFERENCE_DIR=/path/to/your/reference-store
+mkdir -p config
 
+docker run --rm --volume "$PWD/config:/config" \
+  ghcr.io/ncdcbioinformatics/cure-ngs-harmonizer:0.2.1 \
+  init-reference-config /config/reference-config.json \
+  --reference-root /references --cache-version 116
+
+# Edit config/reference-config.json if your relative paths differ.
 docker run --rm \
-  --volume "$PWD/references:/references:ro" \
-  ghcr.io/ncdcbioinformatics/cure-ngs-harmonizer:0.2.0 \
-  doctor-bundle --reference-config /references/reference-config.json
+  --volume "$REFERENCE_DIR:/references:ro" \
+  --volume "$PWD/config:/config:ro" \
+  ghcr.io/ncdcbioinformatics/cure-ngs-harmonizer:0.2.1 \
+  doctor-bundle --reference-config /config/reference-config.json \
+  --reference-root /references
 
 mkdir -p output
 chmod 0777 output  # Linux: writable by the image's non-root UID 10001
 docker run --rm --read-only --tmpfs /tmp:size=2g,mode=1777 \
   --volume "$PWD/input:/data/input:ro" \
   --volume "$PWD/output:/data/output" \
-  --volume "$PWD/references:/references:ro" \
-  ghcr.io/ncdcbioinformatics/cure-ngs-harmonizer:0.2.0 \
+  --volume "$REFERENCE_DIR:/references:ro" \
+  --volume "$PWD/config:/config:ro" \
+  ghcr.io/ncdcbioinformatics/cure-ngs-harmonizer:0.2.1 \
   batch-vcf-to-maf /data/input /data/output \
-  --reference-config /references/reference-config.json \
+  --reference-config /config/reference-config.json \
+  --reference-root /references \
   --jobs 4 --forks 1
 ```
+
+The left side of `--volume "$REFERENCE_DIR:/references:ro"` is selected by the
+user and can point to a local disk or NAS. CURE-NGS does not crawl the rest of
+the host. `doctor-bundle` checks assembly identity, contig style, chain
+direction/target compatibility, and the installed VEP/cache release before the
+batch is run. Per-sample manifests then record the exact selected FASTA, chain,
+and fallback attempts.
 
 GRCh37/hg19 remains the default target. A GRCh38 input is detected and lifted
 with the configured GRCh38-to-GRCh37 chain; a GRCh37 input bypasses liftover.
