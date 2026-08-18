@@ -14,7 +14,7 @@ of the CURE-NGS panel harmonization framework.
 | Item | Value |
 | --- | --- |
 | Historical responsibility | Panel VCF sanitation, assembly harmonization, and vcf2maf execution |
-| Supported commands | `cure-ngs inspect-vcf`, `normalize-vcf`, and `vcf-to-maf` |
+| Supported commands | `cure-ngs inspect-vcf`, `normalize-vcf`, `vcf-to-maf`, and `batch-vcf-to-maf` |
 | Latest audited component release | `NCDC_batch_vcf2maf_V.1.3.3_github` |
 | Canonical installation | `NCDCbioinformatics/cure-ngs-panel-harmonization-framework` |
 
@@ -28,17 +28,18 @@ of the CURE-NGS panel harmonization framework.
 ```bash
 git clone https://github.com/NCDCbioinformatics/cure-ngs-panel-harmonization-framework.git
 cd cure-ngs-panel-harmonization-framework
-docker build --file docker/Dockerfile --tag cure-ngs-harmonizer:0.1.0 .
+docker build --file docker/Dockerfile --tag cure-ngs-harmonizer:0.2.0 .
 ```
 
-After release `0.1.0` appears in the umbrella repository's **Packages** panel,
-the source build can be replaced with:
+The released full and core images can be downloaded without a GitHub login:
 
 ```bash
-docker pull ghcr.io/ncdcbioinformatics/cure-ngs-harmonizer:0.1.0
+docker pull ghcr.io/ncdcbioinformatics/cure-ngs-harmonizer:0.2.0
+docker pull ghcr.io/ncdcbioinformatics/cure-ngs-harmonizer:0.2.0-core
 ```
 
-If GitHub still says `No packages published`, use the source-build command.
+The full image contains VEP, Picard, and vcf2maf. The core image is the smaller
+network-free reviewer and preprocessing environment.
 
 ## Verify and run this capability
 
@@ -48,24 +49,35 @@ Run the network-free six-component reviewer test:
 bash scripts/run_reviewer_demo.sh
 ```
 
-For a real GRCh37 VCF-to-MAF run, mount input, output, hg19 FASTA/FAI, and a
-VEP 116 GRCh37 cache:
+For a heterogeneous directory, keep the large FASTAs, indexes, VEP cache, and
+liftover chains outside the image. Copy the portable configuration template,
+edit its relative paths, and validate the complete bundle first:
 
 ```bash
+cp references/reference-config.example.json references/reference-config.json
+
+docker run --rm \
+  --volume "$PWD/references:/references:ro" \
+  ghcr.io/ncdcbioinformatics/cure-ngs-harmonizer:0.2.0 \
+  doctor-bundle --reference-config /references/reference-config.json
+
 mkdir -p output
 chmod 0777 output  # Linux: writable by the image's non-root UID 10001
-docker run --rm \
+docker run --rm --read-only --tmpfs /tmp:size=2g,mode=1777 \
   --volume "$PWD/input:/data/input:ro" \
   --volume "$PWD/output:/data/output" \
   --volume "$PWD/references:/references:ro" \
-  cure-ngs-harmonizer:0.1.0 vcf-to-maf \
-  /data/input/sample.vcf /data/output/sample.maf \
-  --source-assembly GRCh37 \
-  --source-reference /references/grch37/hg19.fa \
-  --target-assembly GRCh37 \
-  --cache-version 116 --vep-data /references/vep \
-  --vcf-tumor-id TUMOR --tumor-id sample-tumor
+  ghcr.io/ncdcbioinformatics/cure-ngs-harmonizer:0.2.0 \
+  batch-vcf-to-maf /data/input /data/output \
+  --reference-config /references/reference-config.json \
+  --jobs 4 --forks 1
 ```
+
+GRCh37/hg19 remains the default target. A GRCh38 input is detected and lifted
+with the configured GRCh38-to-GRCh37 chain; a GRCh37 input bypasses liftover.
+The configured FASTAs and chains are **ordered fallback alternatives**, not
+sequences merged into one reference. This preserves the retry behavior of
+`NCDC_batch_vcf2maf_V.1.3.3` without hard-coded workstation paths.
 
 Prepare the FASTA, cache, and optional liftover assets by following the
 [reference-data guide](https://github.com/NCDCbioinformatics/cure-ngs-panel-harmonization-framework/blob/main/docs/REFERENCE_DATA.md).
@@ -84,6 +96,7 @@ umbrella CLI is the supported reproducible interface.
 
 - [Project structure](https://github.com/NCDCbioinformatics/cure-ngs-panel-harmonization-framework/blob/main/docs/PROJECT_STRUCTURE.md)
 - [Complete command reference](https://github.com/NCDCbioinformatics/cure-ngs-panel-harmonization-framework/blob/main/docs/COMMAND_REFERENCE.md#vcf-or-gvcf-route)
+- [Restored V1.3.3 batch workflow and reference-bundle layout](https://github.com/NCDCbioinformatics/cure-ngs-panel-harmonization-framework/blob/main/docs/V1.3.3_BATCH_WORKFLOW.md)
 - [Synthetic and attributed public VCF fixtures](https://github.com/NCDCbioinformatics/cure-ngs-panel-harmonization-framework/tree/main/examples)
 - [Reviewer reproduction checklist](https://github.com/NCDCbioinformatics/cure-ngs-panel-harmonization-framework/blob/main/docs/REVIEWER_REPRODUCTION.md)
 
