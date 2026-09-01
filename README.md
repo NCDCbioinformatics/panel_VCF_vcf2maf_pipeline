@@ -23,19 +23,19 @@ of the CURE-NGS panel harmonization framework.
 1. Install [Docker Desktop](https://docs.docker.com/desktop/) on Windows/macOS
    or [Docker Engine](https://docs.docker.com/engine/install/) on Linux.
 2. Confirm that Docker is running with `docker version`.
-3. Build the current audited source:
+3. Build the exact audited `v0.2.3` source if a local build is required:
 
 ```bash
-git clone https://github.com/NCDCbioinformatics/cure-ngs-panel-harmonization-framework.git
+git clone --branch v0.2.3 --depth 1 https://github.com/NCDCbioinformatics/cure-ngs-panel-harmonization-framework.git
 cd cure-ngs-panel-harmonization-framework
-docker build --file docker/Dockerfile --tag cure-ngs-harmonizer:0.2.1 .
+docker build --file docker/Dockerfile --tag cure-ngs-harmonizer:0.2.3 .
 ```
 
 The released full and core images can be downloaded without a GitHub login:
 
 ```bash
-docker pull ghcr.io/ncdcbioinformatics/cure-ngs-harmonizer:0.2.1
-docker pull ghcr.io/ncdcbioinformatics/cure-ngs-harmonizer:0.2.1-core
+docker pull ghcr.io/ncdcbioinformatics/cure-ngs-harmonizer:0.2.3
+docker pull ghcr.io/ncdcbioinformatics/cure-ngs-harmonizer:0.2.3-core
 ```
 
 The full image contains VEP, Picard, and vcf2maf. The core image is the smaller
@@ -47,6 +47,8 @@ First-time users can run the network-free six-component tutorial with the
 public example data:
 
 ```bash
+git clone --branch v0.2.3 --depth 1 https://github.com/NCDCbioinformatics/cure-ngs-panel-harmonization-framework.git
+cd cure-ngs-panel-harmonization-framework
 bash scripts/run_beginner_tutorial.sh
 ```
 
@@ -64,7 +66,7 @@ mkdir -p config
 
 docker run --rm --user "$(id -u):$(id -g)" \
   --volume "$PWD/config:/config" \
-  ghcr.io/ncdcbioinformatics/cure-ngs-harmonizer:0.2.1 \
+  ghcr.io/ncdcbioinformatics/cure-ngs-harmonizer:0.2.3 \
   init-reference-config /config/reference-config.json \
   --reference-root /references --cache-version 116
 
@@ -72,23 +74,30 @@ docker run --rm --user "$(id -u):$(id -g)" \
 docker run --rm \
   --volume "$REFERENCE_DIR:/references:ro" \
   --volume "$PWD/config:/config:ro" \
-  ghcr.io/ncdcbioinformatics/cure-ngs-harmonizer:0.2.1 \
+  ghcr.io/ncdcbioinformatics/cure-ngs-harmonizer:0.2.3 \
   doctor-bundle --reference-config /config/reference-config.json \
   --reference-root /references
 
-mkdir -p output
-chmod 0777 output  # Linux: writable by the image's non-root UID 10001
+NGS_ROOT="$PWD/NGS_VCF"
+mkdir -p "$NGS_ROOT/VCF_ALL"
+chmod 0777 "$NGS_ROOT"  # Linux: writable by the image's non-root UID 10001
+# Copy the VCF/gVCF inputs into "$NGS_ROOT/VCF_ALL".
 docker run --rm --read-only --tmpfs /tmp:size=2g,mode=1777 \
-  --volume "$PWD/input:/data/input:ro" \
-  --volume "$PWD/output:/data/output" \
+  --volume "$NGS_ROOT:/data/NGS_VCF" \
   --volume "$REFERENCE_DIR:/references:ro" \
   --volume "$PWD/config:/config:ro" \
-  ghcr.io/ncdcbioinformatics/cure-ngs-harmonizer:0.2.1 \
-  batch-vcf-to-maf /data/input /data/output \
+  ghcr.io/ncdcbioinformatics/cure-ngs-harmonizer:0.2.3 \
+  batch-vcf-to-maf --workspace-root /data/NGS_VCF \
   --reference-config /config/reference-config.json \
   --reference-root /references \
   --jobs 4 --forks 1
 ```
+
+The workspace command creates the manuscript/V1.3.3 directories
+`VCF_ALL`, `VCF_ALL_LOG`, `VCF_ALL_MAF`, and `VCF_ALL_TMP` beneath
+`NGS_ROOT`. See the audited
+[`v0.2.3` release](https://github.com/NCDCbioinformatics/cure-ngs-panel-harmonization-framework/releases/tag/v0.2.3)
+and [public clean-install run](https://github.com/NCDCbioinformatics/cure-ngs-panel-harmonization-framework/actions/runs/33350796468).
 
 The left side of `--volume "$REFERENCE_DIR:/references:ro"` is selected by the
 user and can point to a local disk or NAS. CURE-NGS does not crawl the rest of
