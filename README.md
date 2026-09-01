@@ -78,16 +78,16 @@ docker run --rm \
   doctor-bundle --reference-config /config/reference-config.json \
   --reference-root /references
 
-KOSMOS_ROOT="$PWD/KOSMOS_VCF"
-mkdir -p "$KOSMOS_ROOT/VCF_ALL"
-chmod 0777 "$KOSMOS_ROOT"  # Linux: writable by the image's non-root UID 10001
-# Copy the VCF/gVCF inputs into "$KOSMOS_ROOT/VCF_ALL".
+NGS_ROOT="$PWD/NGS_VCF"
+mkdir -p "$NGS_ROOT/VCF_ALL"
+chmod 0777 "$NGS_ROOT"  # Linux: writable by the image's non-root UID 10001
+# Copy the VCF/gVCF inputs into "$NGS_ROOT/VCF_ALL".
 docker run --rm --read-only --tmpfs /tmp:size=2g,mode=1777 \
-  --volume "$KOSMOS_ROOT:/data/KOSMOS_VCF" \
+  --volume "$NGS_ROOT:/data/NGS_VCF" \
   --volume "$REFERENCE_DIR:/references:ro" \
   --volume "$PWD/config:/config:ro" \
   ghcr.io/ncdcbioinformatics/cure-ngs-harmonizer:0.2.3 \
-  batch-vcf-to-maf --workspace-root /data/KOSMOS_VCF \
+  batch-vcf-to-maf --workspace-root /data/NGS_VCF \
   --reference-config /config/reference-config.json \
   --reference-root /references \
   --jobs 4 --forks 1
@@ -95,7 +95,7 @@ docker run --rm --read-only --tmpfs /tmp:size=2g,mode=1777 \
 
 The workspace command creates the manuscript/V1.3.3 directories
 `VCF_ALL`, `VCF_ALL_LOG`, `VCF_ALL_MAF`, and `VCF_ALL_TMP` beneath
-`KOSMOS_ROOT`. See the audited
+`NGS_ROOT`. See the audited
 [`v0.2.3` release](https://github.com/NCDCbioinformatics/cure-ngs-panel-harmonization-framework/releases/tag/v0.2.3)
 and [public clean-install run](https://github.com/NCDCbioinformatics/cure-ngs-panel-harmonization-framework/actions/runs/33350796468).
 
